@@ -1,0 +1,44 @@
+ body{
+     font-family: Arial,sans-serif;
+ }
+#mainContainer {
+    width: 370px;
+    height: 300px;
+    border-style: solid;
+    border-width: 1px;
+    border-radius: 10px;
+    border-color: gainsboro;
+}
+
+#item1 {
+   text-align: center;
+    color: red;
+}
+#item2{
+    font-size: 25px;
+    text-align: center;
+    font-weight: bold;
+    font-family: Arial,sans-serif;
+}
+img{
+    margin-top: -30px;
+}
+#item3a{
+    line-height: 20px;
+    font-size: 40px;
+}
+#item3b{
+    margin-left: 15px;
+    font-size: 25px;
+}
+
+#item4{
+    border-width: 0 0 0 1px;
+    border-color: red;
+    border-style: solid;
+    padding-left: 10px;
+
+}
+#item5{
+    margin-left: 5px;
+}

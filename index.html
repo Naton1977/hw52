@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+<div id="mainContainer">
+    <p id="item1"></p>
+    <p id="item2"></p>
+
+
+</div>
+
+<script>
+
+    const xhr = new XMLHttpRequest();
+    xhr.open('GET', 'http://api.openweathermap.org/data/2.5/weather?id=709930&units=metric&appid=f4023f64a6c17a8e5e5a33ce85f8f6f3&lang=ru');
+    xhr.send();
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === xhr.DONE) {
+            const weather = JSON.parse(xhr.responseText);
+            town(weather);
+            icon(weather);
+            description(weather);
+            parameters(weather);
+            console.dir(weather);
+        }
+    }
+
+
+    let dateTime = function () {
+        let currentDataTime = new Date();
+        let day = currentDataTime.getDate();
+        if (day < 10) {
+            day = "0" + day;
+        }
+        let month = currentDataTime.getMonth() + 1;
+        if (month < 10) {
+            month = "0" + month;
+        }
+        let year = currentDataTime.getFullYear();
+        let hours = currentDataTime.getHours();
+        if (hours < 10) {
+            hours = "0" + hours;
+        }
+        let minutes = currentDataTime.getMinutes();
+        if (minutes < 10) {
+            minutes = "0" + minutes;
+        }
+        let seconds = currentDataTime.getSeconds();
+        if (seconds < 10) {
+            seconds = "0" + seconds;
+        }
+        return day + "." + month + "." + year + "&nbsp&nbsp&nbsp&nbsp&nbsp" + hours + ":" + minutes + ":" + seconds;
+    }
+
+    document.getElementById("item1").innerHTML = dateTime();
+    let localTime = function () {
+        document.getElementById("item1").innerHTML = dateTime();
+    }
+    let town = function (weather) {
+        let town = weather.name;
+        let sys = weather.sys;
+        let country = sys.country;
+        document.getElementById("item2").innerHTML = town + "&nbsp&nbsp&nbsp&nbsp" + country;
+    }
+    let icon = function (weather) {
+        let p = document.createElement("p");
+        p.id = "item3";
+        let arr = weather.weather;
+        let icon = arr[0].icon;
+        let img = document.createElement("img");
+        img.src = "http://openweathermap.org/img/wn/" + icon + "@2x.png"
+        img.alt = ""
+        img.width = 50;
+        p.append(img);
+        let span1 = document.createElement("span");
+        span1.id = "item3a";
+        let temp = Number(weather.main.temp);
+        temp = Math.round(temp);
+        temp = String(temp);
+        span1.innerText = temp + "  " + "℃";
+        p.append(span1);
+        let span2 = document.createElement("span");
+        span2.innerText = weather.weather[0].description;
+        span2.style.fontSize = 1.4 + "vw";
+        span2.id = "item3b"
+        p.append(span2);
+        document.getElementById('mainContainer').append(p);
+    }
+
+    let description = function (weather) {
+        let p = document.createElement("p");
+        p.id = "item5";
+        let span1 = document.createElement("span");
+        span1.style.fontWeight = "bold";
+        let feelsLike = Number(weather.main.feels_like);
+        feelsLike = Math.round(feelsLike);
+        feelsLike = String(feelsLike);
+        span1.innerText = "По ощущениям " + feelsLike + "℃";
+        p.append(span1);
+        document.getElementById("mainContainer").append(p);
+    }
+
+    let parameters = function (weather) {
+        let div = document.createElement('div');
+        div.style.width = 330 + "px";
+        div.style.height = 75 + "px"
+        div.style.marginLeft = 5 + "px";
+        div.id = "item4";
+        document.getElementById("mainContainer").append(div);
+        let p = document.createElement("p");
+        let span = document.createElement("span");
+        let directionWind;
+        let azimuth = weather.wind.deg;
+        if (azimuth === 0 || azimuth === 360) {
+            directionWind = "к югу";
+        }
+        if (azimuth === 180) {
+            directionWind = "к северу";
+        }
+        if (azimuth >= 1 && azimuth <= 89) {
+            directionWind = "к юго-западу";
+        }
+        if (azimuth === 90) {
+            directionWind = "к западу";
+        }
+        if (azimuth >= 91 && azimuth <= 179) {
+            directionWind = "к северо-западу";
+        }
+        if (azimuth >= 181 && azimuth <= 269) {
+            directionWind = "к северо-восток";
+        }
+        if (azimuth === 270) {
+            directionWind = "к востоку";
+        }
+        if (azimuth >= 271 && azimuth <= 359) {
+            directionWind = "к юго-востоку";
+        }
+        span.innerText = "Ветер " + weather.wind.speed + " " + "м/с" + " " + " " + directionWind + "\n";
+        span.style.fontSize = 15 + "px";
+        div.append(p);
+        let span1 = document.createElement("span");
+        span1.style.fontSize = 15 + "px";
+        let pressure = weather.main.pressure;
+        span1.innerText = "Давление :" + " " + pressure + " гПа" + "\n";
+        let span2 = document.createElement("span");
+        span2.style.fontSize = 15 + "px";
+        span2.innerText = "Влажность :" + " " + weather.main.humidity + "%" + "\n";
+        let span3 = document.createElement("span");
+        span3.style.fontSize = 15 + "px";
+        let visibility = weather.visibility;
+        visibility = visibility / 1000;
+        span3.innerText = "Видимость : " + " " + visibility + " " + "км";
+        p.append(span, span1, span2, span3);
+    }
+    setInterval(localTime, 1000);
+</script>
+
+</body>
+</html>
